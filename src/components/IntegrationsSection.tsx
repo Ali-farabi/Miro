@@ -1,11 +1,12 @@
 import Image from 'next/image';
+import { getIntegrationsSection, getImageUrl } from '@/lib/payload';
 
-export default function IntegrationsSection() {
-  const integrationIcons = [
-    'slack', 'teams', 'jira', 'asana', 'notion', 
-    'dropbox', 'drive', 'zoom', 'webex', 'figma',
-    'sketch', 'confluence'
-  ];
+export default async function IntegrationsSection() {
+  const section = await getIntegrationsSection();
+
+  if (!section) {
+    return null;
+  }
 
   return (
     <section className="py-20 bg-white">
@@ -13,8 +14,8 @@ export default function IntegrationsSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="relative flex justify-center items-center w-full h-full">
             <Image
-              src="/macbook.png"
-              alt="Miro logo"
+              src={getImageUrl(section.image.url)}
+              alt={section.image.alt}
               fill
               className='object-contain'
               priority
@@ -23,13 +24,18 @@ export default function IntegrationsSection() {
 
           <div>
             <h2 className="text-5xl font-bold text-gray-900 mb-6">
-              Connect<br />your tools,<br />close your tabs
+              {section.title.split('\n').map((line, i) => (
+                <span key={i}>
+                  {line}
+                  {i < section.title.split('\n').length - 1 && <br />}
+                </span>
+              ))}
             </h2>
             <p className="text-xl text-gray-600 mb-8">
-              Whether you want to edit your Google Docs, resolve Jira issues, or collaborate over Zoom, Miro has 100+ integrations with tools you already use and love.
+              {section.description}
             </p>
-            <a href="#" className="text-blue-600 hover:underline flex items-center text-lg font-medium">
-              Learn more
+            <a href={section.linkUrl} className="text-blue-600 hover:underline flex items-center text-lg font-medium">
+              {section.linkText}
               <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>

@@ -1,36 +1,17 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
-import { getBuiltForWorkSection, getWorkCategories, getImageUrl, type WorkCategory, type BuiltForWorkSection as BuiltForWorkSectionType } from '@/lib/payload';
+import { BuiltForWorkSection, WorkCategory } from '@/lib/payload';
 
-export default function BuiltForWorkSection() {
-  const [activeTab, setActiveTab] = useState<string>('');
-  const [section, setSection] = useState<BuiltForWorkSectionType | null>(null);
-  const [categories, setCategories] = useState<WorkCategory[]>([]);
+interface Props {
+  section: BuiltForWorkSection;
+  categories: WorkCategory[];
+}
 
-  useEffect(() => {
-    async function fetchData() {
-      const [sectionData, categoriesData] = await Promise.all([
-        getBuiltForWorkSection(),
-        getWorkCategories()
-      ]);
-      
-      setSection(sectionData);
-      setCategories(categoriesData);
-      
-      if (categoriesData.length > 0 && !activeTab) {
-        setActiveTab(categoriesData[0].name);
-      }
-    }
-    
-    fetchData();
-  }, []);
+export default function BuiltForWorkClient({ section, categories }: Props) {
+  const [activeTab, setActiveTab] = useState(categories[0]?.name || '');
 
-  const activeCategory = categories.find(cat => cat.name === activeTab);
-
-  if (!section || categories.length === 0) {
-    return null;
-  }
+  const activeCategory = categories.find(cat => cat.name === activeTab) || categories[0];
 
   return (
     <section className="py-20 bg-white">
@@ -75,9 +56,9 @@ export default function BuiltForWorkSection() {
               </a>
             </div>
 
-            <div className="relative h-96 w-full bg-gray-100 rounded-lg overflow-hidden shadow-2xl">
+            <div className="relative h-[400px] w-full bg-gray-100 rounded-lg overflow-hidden shadow-2xl">
               <Image
-                src={getImageUrl(activeCategory.image.url)}
+                src={activeCategory.image.url}
                 alt={activeCategory.image.alt}
                 fill
                 className="object-cover"

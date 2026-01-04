@@ -21,7 +21,7 @@ export default function MiroLanding() {
       <WorkTogetherSection />
       <IntegrationsSection />
         <TheWaysWeWorkSection />
-      <BuiltForWorkSection />
+       <BuiltForWorkSection />
       <BuiltForTeamsSection />
       <WhyTrustMiroSection />
       <TestimonialsSection />
