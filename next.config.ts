@@ -3,9 +3,6 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   images: {
     remotePatterns: [
       {
@@ -15,19 +12,13 @@ const nextConfig = {
         pathname: '/api/media/file/**',
       },
       {
-        protocol: 'http',
-        hostname: 'localhost',
-        port: '3001',
-        pathname: '/media/**',
-      },
-      {
         protocol: 'https',
-        hostname: process.env.NEXT_PUBLIC_PAYLOAD_URL?.replace('https://', '') || '',
+        hostname: 'miro-project-production.up.railway.app', 
         pathname: '/api/media/file/**',
       },
       {
         protocol: 'https',
-        hostname: process.env.NEXT_PUBLIC_PAYLOAD_URL?.replace('https://', '') || '',
+        hostname: 'miro-project-production.up.railway.app',
         pathname: '/media/**',
       },
     ],
