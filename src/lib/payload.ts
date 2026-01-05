@@ -15,12 +15,14 @@ export interface Media {
     large?: { url: string; width: number; height: number }
   }
 }
+
 export interface BuiltForTeamsSection {
   id: string
   title: string
   integrationsText: string
   integrationsImage?: Media
 }
+
 export interface WhyTrustSection {
   id: string
   title: string
@@ -35,12 +37,14 @@ export interface TrustStat {
   subtitle: string
   order: number
 }
+
 export interface TestimonialsSection {
   id: string
   title: string
   ctaText: string
   ctaLink: string
 }
+
 export interface TeamCategory {
   id: string
   name: string
@@ -50,6 +54,7 @@ export interface TeamCategory {
   image: Media
   order: number
 }
+
 export interface Hero {
   id: string
   title: string
@@ -162,37 +167,39 @@ export function getImageUrl(url?: string): string {
 
 async function fetchFromPayload<T>(endpoint: string): Promise<T[]> {
   try {
-    const res = await fetch(`${PAYLOAD_API_URL}/api/${endpoint}?depth=2`, {
+    const url = `${PAYLOAD_API_URL}/api/${endpoint}?depth=2`
+    console.log('Fetching from:', url)
+    
+    const res = await fetch(url, {
       next: { revalidate: 60 },
+      cache: 'no-store', // для отладки
     })
 
+    console.log(`Response status for ${endpoint}:`, res.status)
+
     if (!res.ok) {
-      throw new Error(`Failed to fetch ${endpoint}: ${res.status}`)
+      const errorText = await res.text()
+      console.error(`Error response for ${endpoint}:`, errorText)
+      return []
     }
 
     const data = await res.json()
+    console.log(`Found ${data.docs?.length || 0} items for ${endpoint}`)
     return data.docs || []
   } catch (error) {
     console.error(`Error fetching ${endpoint}:`, error)
     return []
   }
 }
-export async function getWhyTrustSection(): Promise<WhyTrustSection | null> {
-  const sections = await fetchFromPayload<WhyTrustSection>('why-trust-sections')
-  return sections[0] || null
-}
 
-export async function getTrustStats(): Promise<TrustStat[]> {
-  const stats = await fetchFromPayload<TrustStat>('trust-stats')
-  return stats.sort((a, b) => a.order - b.order)
-}
+// ИСПРАВЛЕНО: hero вместо heroes
 export async function getHero(): Promise<Hero | null> {
-  const heroes = await fetchFromPayload<Hero>('heroes')
+  const heroes = await fetchFromPayload<Hero>('hero')
   return heroes[0] || null
 }
 
 export async function getFeaturesSection(): Promise<FeaturesSection | null> {
-  const sections = await fetchFromPayload<FeaturesSection>('features-sections')
+  const sections = await fetchFromPayload<FeaturesSection>('features-section') 
   return sections[0] || null
 }
 
@@ -202,21 +209,22 @@ export async function getFeatures(): Promise<Feature[]> {
 }
 
 export async function getWorkTogetherSection(): Promise<WorkTogetherSection | null> {
-  const sections = await fetchFromPayload<WorkTogetherSection>('work-together-sections')
+  const sections = await fetchFromPayload<WorkTogetherSection>('work-together-section')
   return sections[0] || null
 }
 
 export async function getIntegrationsSection(): Promise<IntegrationsSection | null> {
-  const sections = await fetchFromPayload<IntegrationsSection>('integrations-sections')
+  const sections = await fetchFromPayload<IntegrationsSection>('integrations-section')
   return sections[0] || null
 }
+
 export async function getWaysWeWorkSection(): Promise<WaysWeWorkSection | null> {
-  const sections = await fetchFromPayload<WaysWeWorkSection>('ways-we-work-sections')
+  const sections = await fetchFromPayload<WaysWeWorkSection>('ways-we-work-section')
   return sections[0] || null
 }
 
 export async function getBuiltForWorkSection(): Promise<BuiltForWorkSection | null> {
-  const sections = await fetchFromPayload<BuiltForWorkSection>('built-for-work-sections')
+  const sections = await fetchFromPayload<BuiltForWorkSection>('built-for-work-section')
   return sections[0] || null
 }
 
@@ -226,7 +234,7 @@ export async function getWorkCategories(): Promise<WorkCategory[]> {
 }
 
 export async function getTrustedSection(): Promise<TrustedSection | null> {
-  const sections = await fetchFromPayload<TrustedSection>('trusted-sections')
+  const sections = await fetchFromPayload<TrustedSection>('trusted-section')
   return sections[0] || null
 }
 
@@ -242,8 +250,10 @@ export async function getTrustedCompanies(): Promise<TrustedCompany[]> {
 
 export async function getIntegrations(): Promise<Integration[]> {
   return fetchFromPayload<Integration>('integrations')
-}export async function getBuiltForTeamsSection(): Promise<BuiltForTeamsSection | null> {
-  const sections = await fetchFromPayload<BuiltForTeamsSection>('built-for-teams-sections')
+}
+
+export async function getBuiltForTeamsSection(): Promise<BuiltForTeamsSection | null> {
+  const sections = await fetchFromPayload<BuiltForTeamsSection>('built-for-teams-section')
   return sections[0] || null
 }
 
@@ -251,7 +261,18 @@ export async function getTeamCategories(): Promise<TeamCategory[]> {
   const categories = await fetchFromPayload<TeamCategory>('team-categories')
   return categories.sort((a, b) => a.order - b.order)
 }
+
+export async function getWhyTrustSection(): Promise<WhyTrustSection | null> {
+  const sections = await fetchFromPayload<WhyTrustSection>('why-trust-section')
+  return sections[0] || null
+}
+
+export async function getTrustStats(): Promise<TrustStat[]> {
+  const stats = await fetchFromPayload<TrustStat>('trust-stats')
+  return stats.sort((a, b) => a.order - b.order)
+}
+
 export async function getTestimonialsSection(): Promise<TestimonialsSection | null> {
-  const sections = await fetchFromPayload<TestimonialsSection>('testimonials-sections')
+  const sections = await fetchFromPayload<TestimonialsSection>('testimonials-section')
   return sections[0] || null
 }
