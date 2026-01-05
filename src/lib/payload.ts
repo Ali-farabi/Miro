@@ -1,4 +1,4 @@
-const PAYLOAD_API_URL = process.env.NEXT_PUBLIC_PAYLOAD_URL || 'http://localhost:3001'
+const PAYLOAD_API_URL = process.env.NEXT_PUBLIC_PAYLOAD_URL 
 
 export interface Media {
   id: string
@@ -154,14 +154,12 @@ export interface Integration {
   category?: string
 }
 
-// Хелпер для получения полного URL изображения
 export function getImageUrl(url?: string): string {
   if (!url) return ''
   if (url.startsWith('http')) return url
   return `${PAYLOAD_API_URL}${url}`
 }
 
-// Generic fetch function
 async function fetchFromPayload<T>(endpoint: string): Promise<T[]> {
   try {
     const res = await fetch(`${PAYLOAD_API_URL}/api/${endpoint}?depth=2`, {
@@ -180,95 +178,80 @@ async function fetchFromPayload<T>(endpoint: string): Promise<T[]> {
   }
 }
 export async function getWhyTrustSection(): Promise<WhyTrustSection | null> {
-  const sections = await fetchFromPayload<WhyTrustSection>('why-trust-section')
+  const sections = await fetchFromPayload<WhyTrustSection>('why-trust-sections')
   return sections[0] || null
 }
 
-// Получить Trust Stats
 export async function getTrustStats(): Promise<TrustStat[]> {
   const stats = await fetchFromPayload<TrustStat>('trust-stats')
   return stats.sort((a, b) => a.order - b.order)
 }
-// Получить Hero секцию
 export async function getHero(): Promise<Hero | null> {
-  const heroes = await fetchFromPayload<Hero>('hero')
+  const heroes = await fetchFromPayload<Hero>('heroes')
   return heroes[0] || null
 }
 
-// Получить Features Section
 export async function getFeaturesSection(): Promise<FeaturesSection | null> {
-  const sections = await fetchFromPayload<FeaturesSection>('features-section')
+  const sections = await fetchFromPayload<FeaturesSection>('features-sections')
   return sections[0] || null
 }
 
-// Получить Features
 export async function getFeatures(): Promise<Feature[]> {
   const features = await fetchFromPayload<Feature>('features')
   return features.sort((a, b) => a.order - b.order)
 }
 
-// Получить Work Together Section
 export async function getWorkTogetherSection(): Promise<WorkTogetherSection | null> {
-  const sections = await fetchFromPayload<WorkTogetherSection>('work-together-section')
+  const sections = await fetchFromPayload<WorkTogetherSection>('work-together-sections')
   return sections[0] || null
 }
 
-// Получить Integrations Section
 export async function getIntegrationsSection(): Promise<IntegrationsSection | null> {
-  const sections = await fetchFromPayload<IntegrationsSection>('integrations-section')
+  const sections = await fetchFromPayload<IntegrationsSection>('integrations-sections')
   return sections[0] || null
 }
-
-// Получить Ways We Work Section
 export async function getWaysWeWorkSection(): Promise<WaysWeWorkSection | null> {
-  const sections = await fetchFromPayload<WaysWeWorkSection>('ways-we-work-section')
+  const sections = await fetchFromPayload<WaysWeWorkSection>('ways-we-work-sections')
   return sections[0] || null
 }
 
-// Получить Built For Work Section
 export async function getBuiltForWorkSection(): Promise<BuiltForWorkSection | null> {
-  const sections = await fetchFromPayload<BuiltForWorkSection>('built-for-work-section')
+  const sections = await fetchFromPayload<BuiltForWorkSection>('built-for-work-sections')
   return sections[0] || null
 }
 
-// Получить Work Categories
 export async function getWorkCategories(): Promise<WorkCategory[]> {
   const categories = await fetchFromPayload<WorkCategory>('work-categories')
   return categories.sort((a, b) => a.order - b.order)
 }
 
-// Получить Trusted Section
 export async function getTrustedSection(): Promise<TrustedSection | null> {
-  const sections = await fetchFromPayload<TrustedSection>('trusted-section')
+  const sections = await fetchFromPayload<TrustedSection>('trusted-sections')
   return sections[0] || null
 }
 
-// Получить Testimonials
 export async function getTestimonials(): Promise<Testimonial[]> {
   const testimonials = await fetchFromPayload<Testimonial>('testimonials')
   return testimonials.sort((a, b) => a.order - b.order)
 }
 
-// Получить Trusted Companies
 export async function getTrustedCompanies(): Promise<TrustedCompany[]> {
   const companies = await fetchFromPayload<TrustedCompany>('trusted-companies')
   return companies.sort((a, b) => a.order - b.order)
 }
 
-// Получить Integrations
 export async function getIntegrations(): Promise<Integration[]> {
   return fetchFromPayload<Integration>('integrations')
 }export async function getBuiltForTeamsSection(): Promise<BuiltForTeamsSection | null> {
-  const sections = await fetchFromPayload<BuiltForTeamsSection>('built-for-teams-section')
+  const sections = await fetchFromPayload<BuiltForTeamsSection>('built-for-teams-sections')
   return sections[0] || null
 }
 
-// Получить Team Categories
 export async function getTeamCategories(): Promise<TeamCategory[]> {
   const categories = await fetchFromPayload<TeamCategory>('team-categories')
   return categories.sort((a, b) => a.order - b.order)
 }
 export async function getTestimonialsSection(): Promise<TestimonialsSection | null> {
-  const sections = await fetchFromPayload<TestimonialsSection>('testimonials-section')
+  const sections = await fetchFromPayload<TestimonialsSection>('testimonials-sections')
   return sections[0] || null
 }
