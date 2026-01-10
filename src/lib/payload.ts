@@ -165,6 +165,92 @@ export function getImageUrl(url?: string): string {
   return `${PAYLOAD_API_URL}${url}`
 }
 
+export interface HeaderNavItem {
+  label: string
+  type: 'link' | 'dropdown'
+  url?: string
+  dropdownItems?: Array<{ label: string; url: string }>
+  order: number
+}
+
+export interface HeaderCTAButton {
+  text: string
+  url: string
+  style: 'primary' | 'secondary' | 'text'
+  order: number
+}
+
+export interface Header {
+  logo: Media
+  navigation: HeaderNavItem[]
+  ctaButtons: HeaderCTAButton[]
+}
+
+export interface FooterLink {
+  text: string
+  url: string
+  isHighlighted?: boolean
+}
+
+export interface FooterColumn {
+  title: string
+  links: FooterLink[]
+  order: number
+}
+
+export interface Footer {
+  columns: FooterColumn[]
+  socialLinks: Array<{ platform: string; url: string }>
+  copyrightText: string
+  legalLinks: Array<{ text: string; url: string }>
+  appStoreButton: { text: string; boldText: string; url: string }
+  googlePlayButton: { text: string; boldText: string; url: string; icon?: Media }
+  logo: Media
+}
+
+export async function getHeader(): Promise<Header | null> {
+  try {
+    const url = `${PAYLOAD_API_URL}/api/globals/header?depth=2`
+    console.log('Fetching header from:', url)
+    
+    const res = await fetch(url, {
+      next: { revalidate: 60 },
+    })
+
+    if (!res.ok) {
+      console.error('Error fetching header:', res.status)
+      return null
+    }
+
+    const data = await res.json()
+    return data
+  } catch (error) {
+    console.error('Error fetching header:', error)
+    return null
+  }
+}
+
+export async function getFooter(): Promise<Footer | null> {
+  try {
+    const url = `${PAYLOAD_API_URL}/api/globals/footer?depth=2`
+    console.log('Fetching footer from:', url)
+    
+    const res = await fetch(url, {
+      next: { revalidate: 60 },
+    })
+
+    if (!res.ok) {
+      console.error('Error fetching footer:', res.status)
+      return null
+    }
+
+    const data = await res.json()
+    return data
+  } catch (error) {
+    console.error('Error fetching footer:', error)
+    return null
+  }
+}
 async function fetchFromPayload<T>(endpoint: string): Promise<T[]> {
   try {
     const url = `${PAYLOAD_API_URL}/api/${endpoint}?depth=2`
@@ -172,7 +258,7 @@ async function fetchFromPayload<T>(endpoint: string): Promise<T[]> {
     
     const res = await fetch(url, {
       next: { revalidate: 60 },
-      cache: 'no-store', // для отладки
+      cache: 'no-store', 
     })
 
     console.log(`Response status for ${endpoint}:`, res.status)
@@ -192,7 +278,6 @@ async function fetchFromPayload<T>(endpoint: string): Promise<T[]> {
   }
 }
 
-// ИСПРАВЛЕНО: hero вместо heroes
 export async function getHero(): Promise<Hero | null> {
   const heroes = await fetchFromPayload<Hero>('hero')
   return heroes[0] || null
