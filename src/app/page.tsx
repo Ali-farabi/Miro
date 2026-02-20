@@ -12,7 +12,6 @@ import BuiltForTeamsSection from '../components/BuiltForTeamsSection';
 import WhyTrustMiroSection from '../components/WhyTrustMiroSection';
 import TestimonialsSection from '../components/TestimonialsSection';
 import CTASection from '../components/CTASection';
-import Footer from '../components/Footer';
 export default function MiroLanding() {
   return (
     <div className="min-h-screen bg-white">
@@ -28,7 +27,6 @@ export default function MiroLanding() {
       <WhyTrustMiroSection />
       <TestimonialsSection />
       <CTASection />
-      <Footer />
     </div>
   );
 }

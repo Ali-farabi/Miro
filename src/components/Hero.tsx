@@ -6,7 +6,8 @@ export default async function Hero() {
   const hero = await getHero();
 
   if (!hero) {
-    throw new Error('Hero content not found in Payload CMS');
+    console.warn('Hero: No data from Payload CMS');
+    return null;
   }
 
   return (

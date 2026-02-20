@@ -1,4 +1,5 @@
-const PAYLOAD_API_URL = process.env.NEXT_PUBLIC_PAYLOAD_URL 
+const PAYLOAD_API_URL = process.env.NEXT_PUBLIC_PAYLOAD_URL
+const MEDIA_FALLBACK_ENABLED = process.env.NEXT_PUBLIC_MEDIA_FALLBACK === '1'
 
 export interface Media {
   id: string
@@ -161,7 +162,13 @@ export interface Integration {
 
 export function getImageUrl(url?: string): string {
   if (!url) return ''
+  if (MEDIA_FALLBACK_ENABLED) {
+    const cleanUrl = url.split('?')[0]
+    const fileName = cleanUrl.split('/').pop()
+    if (fileName) return `/${fileName}`
+  }
   if (url.startsWith('http')) return url
+  if (!PAYLOAD_API_URL) return url
   return `${PAYLOAD_API_URL}${url}`
 }
 
@@ -258,7 +265,6 @@ async function fetchFromPayload<T>(endpoint: string): Promise<T[]> {
     
     const res = await fetch(url, {
       next: { revalidate: 60 },
-      cache: 'no-store', 
     })
 
     console.log(`Response status for ${endpoint}:`, res.status)

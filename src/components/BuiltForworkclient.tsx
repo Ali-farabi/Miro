@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Image from 'next/image';
-import { BuiltForWorkSection, WorkCategory } from '@/lib/payload';
+import { getImageUrl, BuiltForWorkSection, WorkCategory } from '@/lib/payload';
 
 interface Props {
   section: BuiltForWorkSection;
@@ -58,7 +58,7 @@ export default function BuiltForWorkClient({ section, categories }: Props) {
 
             <div className="relative h-[400px] w-full bg-gray-100 rounded-lg overflow-hidden shadow-2xl">
               <Image
-                src={activeCategory.image.url}
+                src={getImageUrl(activeCategory.image.url)}
                 alt={activeCategory.image.alt}
                 fill
                 className="object-cover"
